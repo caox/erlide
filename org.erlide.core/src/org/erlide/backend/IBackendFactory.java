@@ -9,5 +9,7 @@ public interface IBackendFactory {
     IBackend createBuildBackend(final RuntimeInfo info);
 
     IBackend createBackend(final BackendData data);
+    
+    IBackend registerEWPBackend(final RuntimeInfo info);
 
 }

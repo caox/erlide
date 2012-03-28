@@ -194,7 +194,8 @@ public final class BackendManager implements IEpmdListener, IBackendManager {
         // System.out.println(">>> " + ideBackend);
         return ideBackend;
     }
-
+    
+  
     void notifyBackendChange(final IBackend b, final BackendEvent type,
             final IProject project, final String moduleName) {
         if (listeners == null) {
@@ -430,6 +431,18 @@ public final class BackendManager implements IEpmdListener, IBackendManager {
 
     @Override
     public void removeBackendsForLaunch(final ILaunch launch) {
+    }
+
+    @Override
+    public IBackend registerExsitedBackend(RuntimeInfo info) {
+        ErlLogger.debug("register existed ewp backend " + info.getNodeName());
+        final IBackend b = factory.registerEWPBackend(info);
+        if (b!=null) {
+            addBackend(b);
+            notifyBackendChange(b, BackendEvent.ADDED, null, null);
+            return b;
+        }       
+        return null;
     }
 
 }

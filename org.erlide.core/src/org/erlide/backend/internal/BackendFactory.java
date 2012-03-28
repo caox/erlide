@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
+import org.erlide.backend.BackendCore;
 import org.erlide.backend.BackendData;
 import org.erlide.backend.BackendException;
 import org.erlide.backend.BackendUtils;
@@ -71,6 +72,39 @@ public class BackendFactory implements IBackendFactory {
                     info.getCookie());
             b = internal ? new InternalBackend(data, runtime)
                     : new ExternalBackend(data, runtime);
+            b.initialize();
+            return b;
+        } catch (final BackendException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public IBackend registerEWPBackend(final RuntimeInfo info) {
+//        info.setCookie("ewpcool");
+//        info.setNodeName("ewp");
+        final BackendData data = new BackendData(runtimeInfoManager, info);
+        ErlLogger.debug("Register ewp backend " + data.getNodeName());
+//        if (!data.isManaged() && !data.isAutostart()) {
+//            ErlLogger.info("Not creating backend for %s", data.getNodeName());
+//            return null;
+//        }
+
+        final IBackend b;
+        try {
+            //final RuntimeInfo info = data.getRuntimeInfo();
+            String nodeName = info.getNodeName();
+            final boolean hasHost = nodeName.contains("@");
+            nodeName = hasHost ? nodeName : nodeName + "@"
+                    + RuntimeInfo.getHost();
+//            ILaunch launch = data.getLaunch();
+//            final boolean internal = launch == null;
+//            if (launch == null) {
+//                launch = launchPeer(data);
+//            }
+            final IErlRuntime runtime = new ErlRuntime(nodeName,
+                    info.getCookie());
+            b = new EWPBackend(data, runtime);
             b.initialize();
             return b;
         } catch (final BackendException e) {

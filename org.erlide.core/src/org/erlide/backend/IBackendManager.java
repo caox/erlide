@@ -7,6 +7,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.debug.core.ILaunch;
 import org.erlide.backend.ICodeBundle.CodeContext;
+import org.erlide.backend.runtimeinfo.RuntimeInfo;
 import org.erlide.jinterface.epmd.EpmdWatcher;
 import org.erlide.jinterface.rpc.IRpcCallSite;
 import org.erlide.utils.Tuple;
@@ -56,6 +57,8 @@ public interface IBackendManager {
     void removeBackendsForLaunch(final ILaunch launch);
 
     IBackend createExecutionBackend(final BackendData data);
+    
+    IBackend registerExsitedBackend(final RuntimeInfo info);
 
     void dispose();
 
