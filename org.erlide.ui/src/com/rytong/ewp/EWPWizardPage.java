@@ -120,7 +120,6 @@ public class EWPWizardPage extends WizardPage {
      */
     void handleBrowse() {
         final DirectoryDialog dialog = new DirectoryDialog(getShell());
-        dialog.setText("choose the ewp ebin directory:");
         ewpEbinText.setText(dialog.open());
     }
     

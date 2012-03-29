@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
-import org.erlide.backend.BackendCore;
 import org.erlide.backend.BackendData;
 import org.erlide.backend.BackendException;
 import org.erlide.backend.BackendUtils;
@@ -104,9 +103,26 @@ public class BackendFactory implements IBackendFactory {
 //            }
             final IErlRuntime runtime = new ErlRuntime(nodeName,
                     info.getCookie());
-            b = new EWPBackend(data, runtime);
-            b.initialize();
-            return b;
+            int i =10;
+            synchronized (runtime){
+                while(!runtime.isAvailable()&&i>0){       
+                    try {
+                        runtime.wait(1000);
+                    } catch (InterruptedException e) {
+                    }
+                    i--;
+                }
+            }
+            
+            ErlLogger.debug("the runtime is %s", runtime.isAvailable());
+            if(runtime.isAvailable()){           
+                b = new EWPBackend(data, runtime);
+                ErlLogger.debug("create new ewp backend ");
+                b.initialize();
+                ErlLogger.debug("after initialized ");
+                return b;
+            }
+           
         } catch (final BackendException e) {
             e.printStackTrace();
         }
