@@ -95,6 +95,7 @@ public class ErlangPerspective implements IPerspectiveFactory {
         layout.addShowViewShortcut(IPageLayout.ID_PROJECT_EXPLORER);
         //
         layout.addNewWizardShortcut("org.erlide.ui.wizards.newproject");
+        //layout.addNewWizardShortcut("org.erlide.ui.wizards.EWP");
         layout.addNewWizardShortcut("org.erlide.ui.wizards.ErlangSourceFile");
         layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder"); //$NON-NLS-1$
         layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.file"); //$NON-NLS-1$
