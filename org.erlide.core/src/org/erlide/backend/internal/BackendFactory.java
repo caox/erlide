@@ -102,17 +102,7 @@ public class BackendFactory implements IBackendFactory {
 //                launch = launchPeer(data);
 //            }
             final IErlRuntime runtime = new ErlRuntime(nodeName,
-                    info.getCookie());
-            int i =10;
-            synchronized (runtime){
-                while(!runtime.isAvailable()&&i>0){       
-                    try {
-                        runtime.wait(1000);
-                    } catch (InterruptedException e) {
-                    }
-                    i--;
-                }
-            }
+                    info.getCookie(), false);
             
             ErlLogger.debug("the runtime is %s", runtime.isAvailable());
             if(runtime.isAvailable()){           

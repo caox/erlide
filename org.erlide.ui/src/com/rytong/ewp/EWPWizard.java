@@ -35,8 +35,7 @@ public class EWPWizard extends Wizard implements INewWizard {
 
     @Override
     public void init(IWorkbench workbench, IStructuredSelection selection) {
-        // TODO Auto-generated method stub
-
+        fSelection = selection; 
     }
 
     @Override
@@ -50,10 +49,9 @@ public class EWPWizard extends Wizard implements INewWizard {
         final RuntimeInfo info = ideBackend.getRuntimeInfo();
         info.setNodeName(ewpName);
         info.setCookie(cookie);
-        // TODO Add error message and prompt it when can't find the ewp node
         if (null==BackendCore.getBackendManager().registerExsitedBackend(info)){
             MessageDialog.openError(getShell(), "Error",
-                    "can't find ewp node with name " + ewpName + " and cookie " + cookie);
+                    "can't find ewp node with name: " + ewpName + " and cookie: " + cookie);
             return false;
         }
         return true;

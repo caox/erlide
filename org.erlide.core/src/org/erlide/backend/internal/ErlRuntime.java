@@ -46,16 +46,24 @@ public class ErlRuntime extends OtpNodeStatus implements IErlRuntime {
     private final String cookie;
 
     public ErlRuntime(final String name, final String cookie) {
-        state = State.DISCONNECTED;
-        peerName = name;
-        this.cookie = cookie;
-        startLocalNode();
+        this(name, cookie, true);
         // if (epmdWatcher.isRunningNode(name)) {
         // connect();
         // }
     }
-
+    
+    public ErlRuntime(final String name, final String cookie, boolean async) {
+        state = State.DISCONNECTED;
+        peerName = name;
+        this.cookie = cookie;
+        startLocalNode(async);
+    }
+    
     public void startLocalNode() {
+        startLocalNode(true);
+    }
+    
+    public void startLocalNode(boolean async) {
         boolean nodeCreated = false;
         synchronized (localNodeLock) {
             int i = 0;
@@ -63,7 +71,13 @@ public class ErlRuntime extends OtpNodeStatus implements IErlRuntime {
                 try {
                     i++;
                     localNode = ErlRuntime.createOtpNode(cookie);
-                    localNode.registerStatusHandler(this);
+                    if (async) {
+                        localNode.registerStatusHandler(this);
+                    } else {
+                        if(connectRetry()){
+                            state = State.CONNECTED;
+                        }
+                    }                
                     nodeCreated = true;
                 } catch (final IOException e) {
                     ErlLogger
