@@ -18,6 +18,14 @@
             symbolicFontName="org.eclipse.jface.textfont">
          <contentTypeBinding contentTypeId="org.erlide.core.content.erlang"/>
       </editor>
+      <editor
+            class="com.rytong.lua.LuaEditor"
+            default="false"
+            extensions="lua"
+            icon="icons/icons/lua-logo.gif"
+            id="com.rytong.editors.LuaEditor"
+            name="EWP Lua Editor">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.editorActions">
@@ -1982,5 +1990,11 @@
             class="org.erlide.ui.editors.erl.ErlangDocumentSetupParticipant"
             contentTypeId="org.erlide.core.content.erlang">
       </participant>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.rytong.lua.LuaPreferenceInitializer">
+      </initializer>
    </extension>
 </plugin>
