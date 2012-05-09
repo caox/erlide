@@ -10,7 +10,6 @@ Bundle-Localization: plugin
 Export-Package: com.bdaum.overlayPages;x-internal:=true,
  com.novocode.naf.swt.custom;x-internal:=true,
  com.rytong.ewp,
- com.rytong.lua,
  com.swtdesigner;x-internal:=true,
  org.erlide.debug.ui.actions;x-internal:=true,
  org.erlide.debug.ui.model;x-internal:=true;
@@ -345,9 +344,7 @@ Require-Bundle: org.eclipse.compare,
  org.eclipse.core.databinding.observable,
  org.eclipse.core.databinding.property,
  org.eclipse.jface.databinding,
- com.ibm.icu,
- org.eclipse.dltk.core;bundle-version="3.0.1",
- org.eclipse.dltk.ui;bundle-version="3.0.1"
+ com.ibm.icu
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Eclipse-ExtensibleAPI: true

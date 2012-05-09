@@ -9,7 +9,7 @@
  *     Sierra Wireless - initial API and implementation
  *******************************************************************************/
 
-package com.rytong.lua;
+package com.rytong.template.editor.cs;
 
 import org.eclipse.dltk.ui.text.AbstractScriptScanner;
 import org.eclipse.dltk.ui.text.IColorManager;
@@ -26,7 +26,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class LuaSourceViewerConfiguration extends
+public class TemplateSourceViewerConfiguration extends
         ScriptSourceViewerConfiguration {
 
     private AbstractScriptScanner fCodeScanner;
@@ -36,7 +36,7 @@ public class LuaSourceViewerConfiguration extends
     private AbstractScriptScanner fMultilineCommentScanner;
     private AbstractScriptScanner fNumberScanner;
     
-    public LuaSourceViewerConfiguration(IColorManager colorManager, IPreferenceStore preferenceStore, ITextEditor editor, String partitioning) {
+    public TemplateSourceViewerConfiguration(IColorManager colorManager, IPreferenceStore preferenceStore, ITextEditor editor, String partitioning) {
         super(colorManager, preferenceStore, editor, partitioning);
     }
     
@@ -55,24 +55,24 @@ public class LuaSourceViewerConfiguration extends
         reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
         dr = new DefaultDamagerRepairer(this.fStringScanner);
-        reconciler.setDamager(dr, ILuaPartitions.LUA_STRING);
-        reconciler.setRepairer(dr, ILuaPartitions.LUA_STRING);
+        reconciler.setDamager(dr, ITemplatePartitions.LUA_STRING);
+        reconciler.setRepairer(dr, ITemplatePartitions.LUA_STRING);
 
         dr = new DefaultDamagerRepairer(this.fSingleQuoteStringScanner);
-        reconciler.setDamager(dr, ILuaPartitions.LUA_SINGLE_QUOTE_STRING);
-        reconciler.setRepairer(dr, ILuaPartitions.LUA_SINGLE_QUOTE_STRING);
+        reconciler.setDamager(dr, ITemplatePartitions.LUA_SINGLE_QUOTE_STRING);
+        reconciler.setRepairer(dr, ITemplatePartitions.LUA_SINGLE_QUOTE_STRING);
 
         dr = new DefaultDamagerRepairer(this.fMultilineCommentScanner);
-        reconciler.setDamager(dr, ILuaPartitions.LUA_MULTI_LINE_COMMENT);
-        reconciler.setRepairer(dr, ILuaPartitions.LUA_MULTI_LINE_COMMENT);
+        reconciler.setDamager(dr, ITemplatePartitions.LUA_MULTI_LINE_COMMENT);
+        reconciler.setRepairer(dr, ITemplatePartitions.LUA_MULTI_LINE_COMMENT);
 
         dr = new DefaultDamagerRepairer(this.fCommentScanner);
-        reconciler.setDamager(dr, ILuaPartitions.LUA_COMMENT);
-        reconciler.setRepairer(dr, ILuaPartitions.LUA_COMMENT);
+        reconciler.setDamager(dr, ITemplatePartitions.LUA_COMMENT);
+        reconciler.setRepairer(dr, ITemplatePartitions.LUA_COMMENT);
 
         dr = new DefaultDamagerRepairer(this.fNumberScanner);
-        reconciler.setDamager(dr, ILuaPartitions.LUA_NUMBER);
-        reconciler.setRepairer(dr, ILuaPartitions.LUA_NUMBER);
+        reconciler.setDamager(dr, ITemplatePartitions.LUA_NUMBER);
+        reconciler.setRepairer(dr, ITemplatePartitions.LUA_NUMBER);
 
         return reconciler;
     }
@@ -85,12 +85,12 @@ public class LuaSourceViewerConfiguration extends
         this.fCodeScanner = new LuaCodeScanner(this.getColorManager(), this.fPreferenceStore);
 
         // This is default scanners for partitions with same color.
-        this.fStringScanner = new SingleTokenScriptScanner(this.getColorManager(), this.fPreferenceStore, ILuaColorConstants.LUA_STRING);
-        this.fSingleQuoteStringScanner = new SingleTokenScriptScanner(this.getColorManager(), this.fPreferenceStore, ILuaColorConstants.LUA_STRING);
+        this.fStringScanner = new SingleTokenScriptScanner(this.getColorManager(), this.fPreferenceStore, ITemplateColorConstants.LUA_STRING);
+        this.fSingleQuoteStringScanner = new SingleTokenScriptScanner(this.getColorManager(), this.fPreferenceStore, ITemplateColorConstants.LUA_STRING);
         this.fMultilineCommentScanner = new SingleTokenScriptScanner(this.getColorManager(), this.fPreferenceStore,
-                ILuaColorConstants.LUA_MULTI_LINE_COMMENT);
-        this.fCommentScanner = new SingleTokenScriptScanner(this.getColorManager(), this.fPreferenceStore, ILuaColorConstants.LUA_SINGLE_LINE_COMMENT);
-        this.fNumberScanner = new SingleTokenScriptScanner(this.getColorManager(), this.fPreferenceStore, ILuaColorConstants.LUA_NUMBER);
+                ITemplateColorConstants.LUA_MULTI_LINE_COMMENT);
+        this.fCommentScanner = new SingleTokenScriptScanner(this.getColorManager(), this.fPreferenceStore, ITemplateColorConstants.LUA_SINGLE_LINE_COMMENT);
+        this.fNumberScanner = new SingleTokenScriptScanner(this.getColorManager(), this.fPreferenceStore, ITemplateColorConstants.LUA_NUMBER);
     }
 
     public void handlePropertyChangeEvent(PropertyChangeEvent event) {
@@ -127,12 +127,12 @@ public class LuaSourceViewerConfiguration extends
      */
     @Override
     protected String getCommentPrefix() {
-        return LuaConstants.COMMENT_STRING;
+        return TemplateConstants.COMMENT_STRING;
     }
 
     @Override
     public String[] getConfiguredContentTypes(final ISourceViewer sourceViewer) {
-        return ILuaPartitions.LUA_PARTITION_TYPES;
+        return ITemplatePartitions.LUA_PARTITION_TYPES;
     }
 
 }

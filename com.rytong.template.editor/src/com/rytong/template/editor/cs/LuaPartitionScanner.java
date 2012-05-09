@@ -9,7 +9,7 @@
  *     Sierra Wireless - initial API and implementation
  *******************************************************************************/
 
-package com.rytong.lua;
+package com.rytong.template.editor.cs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +31,8 @@ public class LuaPartitionScanner extends RuleBasedPartitionScanner {
         /*
          * Deal with single and double quote multi lines strings
          */
-        IToken string = new Token(ILuaPartitions.LUA_STRING);
-        IToken singleQuoteString = new Token(ILuaPartitions.LUA_SINGLE_QUOTE_STRING);
+        IToken string = new Token(ITemplatePartitions.LUA_STRING);
+        IToken singleQuoteString = new Token(ITemplatePartitions.LUA_SINGLE_QUOTE_STRING);
         rules.add(new MultiLineRule("\'", "\'", singleQuoteString, '\\', false)); //$NON-NLS-1$ //$NON-NLS-2$
         rules.add(new MultiLineRule("\"", "\"", string, '\\', false)); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -41,12 +41,12 @@ public class LuaPartitionScanner extends RuleBasedPartitionScanner {
          */
 
         // Multi-line
-        IToken multiLineComment = new Token(ILuaPartitions.LUA_MULTI_LINE_COMMENT);
+        IToken multiLineComment = new Token(ITemplatePartitions.LUA_MULTI_LINE_COMMENT);
         rules.add(new MultiLineRule("--[[", "]]", multiLineComment));//$NON-NLS-1$ //$NON-NLS-2$
 
         // Single line
-        IToken comment = new Token(ILuaPartitions.LUA_COMMENT);
-        rules.add(new EndOfLineRule(LuaConstants.COMMENT_STRING, comment));
+        IToken comment = new Token(ITemplatePartitions.LUA_COMMENT);
+        rules.add(new EndOfLineRule(TemplateConstants.COMMENT_STRING, comment));
 
         // Apply rules
         IPredicateRule[] result = new IPredicateRule[rules.size()];

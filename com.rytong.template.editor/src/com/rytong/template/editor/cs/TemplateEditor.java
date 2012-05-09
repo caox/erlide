@@ -8,7 +8,7 @@
  * Contributors:
  *     Sierra Wireless - initial API and implementation
  *******************************************************************************/
-package com.rytong.lua;
+package com.rytong.template.editor.cs;
 
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
@@ -17,13 +17,15 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.ui.IEditorInput;
-import org.erlide.ui.internal.ErlideUIPlugin;
 
-public class LuaEditor extends ScriptEditor {
+import com.rytong.template.editor.Activator;
+
+
+public class TemplateEditor extends ScriptEditor {
     
-    public static final String EDITOR_ID = "com.rytong.editors.LuaEditor";
+    public static final String EDITOR_ID = "com.rytong.editors.TemplateEditor";
 
-    public static final String EDITOR_CONTEXT = "#EWPLuaEditorContext";
+    public static final String EDITOR_CONTEXT = "#EWPTemplateEditorContext";
 
     protected void initializeEditor() {
         super.initializeEditor();
@@ -31,16 +33,16 @@ public class LuaEditor extends ScriptEditor {
     }
     
     public IPreferenceStore getScriptPreferenceStore() {
-        return ErlideUIPlugin.getDefault().getPreferenceStore();
+        return Activator.getDefault().getPreferenceStore();
     }
     
     /** Connects partitions used to deal with comments or strings in editor. */
     protected void connectPartitioningToElement(IEditorInput input, IDocument document) {
         if (document instanceof IDocumentExtension3) {
             IDocumentExtension3 extension = (IDocumentExtension3) document;
-            if (extension.getDocumentPartitioner(ILuaPartitions.LUA_PARTITIONING) == null) {
-                LuaTextTools tools = ErlideUIPlugin.getDefault().getTextTools();
-                tools.setupDocumentPartitioner(document, ILuaPartitions.LUA_PARTITIONING);
+            if (extension.getDocumentPartitioner(ITemplatePartitions.LUA_PARTITIONING) == null) {
+                TemplateTextTools tools = Activator.getDefault().getTextTools();
+                tools.setupDocumentPartitioner(document, ITemplatePartitions.LUA_PARTITIONING);
             }
         }
     }
@@ -59,7 +61,7 @@ public class LuaEditor extends ScriptEditor {
     
     @Override
     public ScriptTextTools getTextTools() {
-        return ErlideUIPlugin.getDefault().getTextTools();
+        return Activator.getDefault().getTextTools();
     }
 
 }

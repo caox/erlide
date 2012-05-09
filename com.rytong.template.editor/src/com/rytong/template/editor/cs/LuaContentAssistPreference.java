@@ -9,11 +9,12 @@
  *     Sierra Wireless - initial API and implementation
  *******************************************************************************/
 
-package com.rytong.lua;
+package com.rytong.template.editor.cs;
 
 import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.dltk.ui.text.completion.ContentAssistPreference;
-import org.erlide.ui.internal.ErlideUIPlugin;
+
+import com.rytong.template.editor.Activator;
 
 public class LuaContentAssistPreference extends ContentAssistPreference {
     private static LuaContentAssistPreference sDefault;
@@ -26,7 +27,7 @@ public class LuaContentAssistPreference extends ContentAssistPreference {
     }
     @Override
     protected ScriptTextTools getTextTools() {
-        return ErlideUIPlugin.getDefault().getTextTools();
+        return Activator.getDefault().getTextTools();
     }
 
 }

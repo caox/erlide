@@ -9,7 +9,7 @@
  *     Sierra Wireless - initial API and implementation
  *******************************************************************************/
 
-package com.rytong.lua;
+package com.rytong.template.editor.cs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +34,8 @@ public class LuaCodeScanner extends AbstractScriptScanner {
     private static String[] fgKeywords = { "and", "break", "do", "else", "elseif", "end", "false", "for", "function", "if", "in", "local", "nil",
             "not", "or", "repeat", "return", "then", "true", "until", "while" };
 
-    private static String[] fgTokenProperties = new String[] { ILuaColorConstants.LUA_STRING, ILuaColorConstants.LUA_SINGLE_LINE_COMMENT,
-            ILuaColorConstants.LUA_MULTI_LINE_COMMENT, ILuaColorConstants.LUA_NUMBER, ILuaColorConstants.LUA_DEFAULT, ILuaColorConstants.LUA_KEYWORD };
+    private static String[] fgTokenProperties = new String[] { ITemplateColorConstants.LUA_STRING, ITemplateColorConstants.LUA_SINGLE_LINE_COMMENT,
+            ITemplateColorConstants.LUA_MULTI_LINE_COMMENT, ITemplateColorConstants.LUA_NUMBER, ITemplateColorConstants.LUA_DEFAULT, ITemplateColorConstants.LUA_KEYWORD };
 
     public LuaCodeScanner(IColorManager manager, IPreferenceStore store) {
         super(manager, store);
@@ -48,11 +48,11 @@ public class LuaCodeScanner extends AbstractScriptScanner {
 
     protected List<IRule> createRules() {
         List<IRule> rules = new ArrayList<IRule>();
-        IToken keyword = this.getToken(ILuaColorConstants.LUA_KEYWORD);
-        IToken comment = this.getToken(ILuaColorConstants.LUA_SINGLE_LINE_COMMENT);
-        IToken multiline = this.getToken(ILuaColorConstants.LUA_MULTI_LINE_COMMENT);
-        IToken numbers = this.getToken(ILuaColorConstants.LUA_NUMBER);
-        IToken other = this.getToken(ILuaColorConstants.LUA_DEFAULT);
+        IToken keyword = this.getToken(ITemplateColorConstants.LUA_KEYWORD);
+        IToken comment = this.getToken(ITemplateColorConstants.LUA_SINGLE_LINE_COMMENT);
+        IToken multiline = this.getToken(ITemplateColorConstants.LUA_MULTI_LINE_COMMENT);
+        IToken numbers = this.getToken(ITemplateColorConstants.LUA_NUMBER);
+        IToken other = this.getToken(ITemplateColorConstants.LUA_DEFAULT);
 
         // Add rule for multi-line comments
         rules.add(new MultiLineRule("--[[", "]]", multiline));

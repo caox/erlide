@@ -9,7 +9,7 @@
  *     Sierra Wireless - initial API and implementation
  *******************************************************************************/
 
-package com.rytong.lua;
+package com.rytong.template.editor.cs;
 
 import org.eclipse.dltk.ui.text.ScriptSourceViewerConfiguration;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
@@ -17,18 +17,18 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class LuaTextTools extends ScriptTextTools {
+public class TemplateTextTools extends ScriptTextTools {
 
-    private final static String[] LEGAL_CONTENT_TYPES = new String[] { ILuaPartitions.LUA_STRING, ILuaPartitions.LUA_COMMENT,
-        ILuaPartitions.LUA_SINGLE_QUOTE_STRING, ILuaPartitions.LUA_MULTI_LINE_COMMENT, ILuaPartitions.LUA_NUMBER };
+    private final static String[] LEGAL_CONTENT_TYPES = new String[] { ITemplatePartitions.LUA_STRING, ITemplatePartitions.LUA_COMMENT,
+        ITemplatePartitions.LUA_SINGLE_QUOTE_STRING, ITemplatePartitions.LUA_MULTI_LINE_COMMENT, ITemplatePartitions.LUA_NUMBER };
 
-    public LuaTextTools(boolean autoDisposeOnDisplayDispose) {
-        super(ILuaPartitions.LUA_PARTITIONING, LEGAL_CONTENT_TYPES, autoDisposeOnDisplayDispose);
+    public TemplateTextTools(boolean autoDisposeOnDisplayDispose) {
+        super(ITemplatePartitions.LUA_PARTITIONING, LEGAL_CONTENT_TYPES, autoDisposeOnDisplayDispose);
     }
     
     @Override
     public ScriptSourceViewerConfiguration createSourceViewerConfiguraton(IPreferenceStore preferenceStore, ITextEditor editor, String partitioning) {
-        return new LuaSourceViewerConfiguration(getColorManager(), preferenceStore, editor, partitioning);
+        return new TemplateSourceViewerConfiguration(getColorManager(), preferenceStore, editor, partitioning);
     }
 
     /**

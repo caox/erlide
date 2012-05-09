@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="Sample XML Editor"
+            extensions="xml"
+            icon="icons/sample.gif"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            class="com.rytong.template.editor.editors.XMLEditor"
+            id="com.rytong.template.editor.editors.XMLEditor">
+      </editor>
+      <editor
+            class="com.rytong.template.editor.cs.TemplateEditor"
+            default="false"
+            extensions="cs"
+            icon="icons/lua-logo.gif"
+            id="com.rytong.editors.TemplateEditor"
+            name="EWP Template Editor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.rytong.template.editor.cs.LuaPreferenceInitializer">
+      </initializer>
+   </extension>
+
+</plugin>

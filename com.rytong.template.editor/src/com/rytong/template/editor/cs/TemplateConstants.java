@@ -9,13 +9,13 @@
  *     Sierra Wireless - initial API and implementation
  *******************************************************************************/
 
-package com.rytong.lua;
+package com.rytong.template.editor.cs;
 
 import org.eclipse.dltk.ast.Modifiers;
 
-public class LuaConstants {
+public class TemplateConstants {
 
-    protected LuaConstants() {
+    protected TemplateConstants() {
     }
 
     public static final int LuaAttributeModifier = 2 << (Modifiers.USER_MODIFIER + 1);
