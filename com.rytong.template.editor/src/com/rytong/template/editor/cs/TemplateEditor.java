@@ -40,9 +40,9 @@ public class TemplateEditor extends ScriptEditor {
     protected void connectPartitioningToElement(IEditorInput input, IDocument document) {
         if (document instanceof IDocumentExtension3) {
             IDocumentExtension3 extension = (IDocumentExtension3) document;
-            if (extension.getDocumentPartitioner(ITemplatePartitions.LUA_PARTITIONING) == null) {
+            if (extension.getDocumentPartitioner(ITemplatePartitions.TEMPLATE_PARTITIONING) == null) {
                 TemplateTextTools tools = Activator.getDefault().getTextTools();
-                tools.setupDocumentPartitioner(document, ITemplatePartitions.LUA_PARTITIONING);
+                tools.setupDocumentPartitioner(document, ITemplatePartitions.TEMPLATE_PARTITIONING);
             }
         }
     }

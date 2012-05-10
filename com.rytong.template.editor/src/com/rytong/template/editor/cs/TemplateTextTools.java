@@ -19,11 +19,18 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 public class TemplateTextTools extends ScriptTextTools {
 
-    private final static String[] LEGAL_CONTENT_TYPES = new String[] { ITemplatePartitions.LUA_STRING, ITemplatePartitions.LUA_COMMENT,
-        ITemplatePartitions.LUA_SINGLE_QUOTE_STRING, ITemplatePartitions.LUA_MULTI_LINE_COMMENT, ITemplatePartitions.LUA_NUMBER };
+	private final static String[] LEGAL_CONTENT_TYPES = 
+			new String[] { 
+		ITemplatePartitions.LUA,
+		ITemplatePartitions.XML_TAG,
+		ITemplatePartitions.LUA_STRING, 
+		ITemplatePartitions.LUA_COMMENT,
+		ITemplatePartitions.LUA_SINGLE_QUOTE_STRING, 
+		ITemplatePartitions.LUA_MULTI_LINE_COMMENT, 
+		ITemplatePartitions.LUA_NUMBER };
 
     public TemplateTextTools(boolean autoDisposeOnDisplayDispose) {
-        super(ITemplatePartitions.LUA_PARTITIONING, LEGAL_CONTENT_TYPES, autoDisposeOnDisplayDispose);
+        super(ITemplatePartitions.TEMPLATE_PARTITIONING, LEGAL_CONTENT_TYPES, autoDisposeOnDisplayDispose);
     }
     
     @Override
@@ -36,7 +43,7 @@ public class TemplateTextTools extends ScriptTextTools {
      */
     @Override
     public IPartitionTokenScanner createPartitionScanner() {
-        return new LuaPartitionScanner();
+        return new TemplatePartitionScanner();
     }
 
 }

@@ -15,14 +15,25 @@ import org.eclipse.jface.text.IDocument;
 
 public interface ITemplatePartitions {
     public static final String LUA_PARTITIONING =  TemplateConstants.LUA_PARTITIONING;
+    public static final String TEMPLATE_PARTITIONING = "__ewp_template_partitioning";
 
+    public static final String XML_TAG = "__xml_tag";
+    
+    public static final String LUA = "__lua";
     public static final String LUA_COMMENT = "__lua_comment"; //$NON-NLS-1$
     public static final String LUA_MULTI_LINE_COMMENT = "__lua_multi_line_comment"; //$NON-NLS-1$
     public static final String LUA_NUMBER = "__lua_number"; //$NON-NLS-1$
     public static final String LUA_STRING = "__lua_string"; //$NON-NLS-1$
     public static final String LUA_SINGLE_QUOTE_STRING = "__lua_single_quote_string"; //$NON-NLS-1$
 
-    public static final String[] LUA_PARTITION_TYPES = new String[] { IDocument.DEFAULT_CONTENT_TYPE, ITemplatePartitions.LUA_COMMENT,
-            ITemplatePartitions.LUA_COMMENT, ITemplatePartitions.LUA_STRING, ITemplatePartitions.LUA_SINGLE_QUOTE_STRING, ITemplatePartitions.LUA_MULTI_LINE_COMMENT,
-            ITemplatePartitions.LUA_NUMBER };
+    public static final String[] TEMPLATE_PARTITION_TYPES = new String[] { 
+    	IDocument.DEFAULT_CONTENT_TYPE,
+    	ITemplatePartitions.LUA,
+    	ITemplatePartitions.XML_TAG,
+    	ITemplatePartitions.LUA_COMMENT, 
+    	ITemplatePartitions.LUA_STRING, 
+    	ITemplatePartitions.LUA_SINGLE_QUOTE_STRING, 
+    	ITemplatePartitions.LUA_MULTI_LINE_COMMENT,
+    	ITemplatePartitions.LUA_NUMBER };
+	
 }

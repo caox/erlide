@@ -19,22 +19,30 @@ import org.eclipse.dltk.ui.text.SingleTokenScriptScanner;
 import org.eclipse.dltk.ui.text.completion.ContentAssistPreference;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
+import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+import com.rytong.template.editor.editors.ColorManager;
+import com.rytong.template.editor.editors.IXMLColorConstants;
+import com.rytong.template.editor.editors.XMLScanner;
+import com.rytong.template.editor.editors.XMLTagScanner;
+
 public class TemplateSourceViewerConfiguration extends
         ScriptSourceViewerConfiguration {
 
-    private AbstractScriptScanner fCodeScanner;
-    private AbstractScriptScanner fStringScanner;
-    private AbstractScriptScanner fSingleQuoteStringScanner;
-    private AbstractScriptScanner fCommentScanner;
-    private AbstractScriptScanner fMultilineCommentScanner;
-    private AbstractScriptScanner fNumberScanner;
+    private AbstractScriptScanner fLuaCodeScanner;
+	private XMLTagScanner fXMLTagScanner;
+	private XMLScanner fXMLScanner;
+	private ColorManager colorManager;
+//    private AbstractScriptScanner fCommentScanner;
+//    private AbstractScriptScanner fMultilineCommentScanner;
+//    private AbstractScriptScanner fNumberScanner;
     
     public TemplateSourceViewerConfiguration(IColorManager colorManager, IPreferenceStore preferenceStore, ITextEditor editor, String partitioning) {
         super(colorManager, preferenceStore, editor, partitioning);
@@ -50,29 +58,18 @@ public class TemplateSourceViewerConfiguration extends
         reconciler.setDocumentPartitioning(this.getConfiguredDocumentPartitioning(sourceViewer));
 
         DefaultDamagerRepairer dr;
-        dr = new DefaultDamagerRepairer(this.fCodeScanner);
+        dr = new DefaultDamagerRepairer(this.fXMLScanner);
         reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
         reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
-        dr = new DefaultDamagerRepairer(this.fStringScanner);
-        reconciler.setDamager(dr, ITemplatePartitions.LUA_STRING);
-        reconciler.setRepairer(dr, ITemplatePartitions.LUA_STRING);
+        dr = new DefaultDamagerRepairer(this.fLuaCodeScanner);
+        reconciler.setDamager(dr, ITemplatePartitions.LUA);
+        reconciler.setRepairer(dr, ITemplatePartitions.LUA);
 
-        dr = new DefaultDamagerRepairer(this.fSingleQuoteStringScanner);
-        reconciler.setDamager(dr, ITemplatePartitions.LUA_SINGLE_QUOTE_STRING);
-        reconciler.setRepairer(dr, ITemplatePartitions.LUA_SINGLE_QUOTE_STRING);
+        dr = new DefaultDamagerRepairer(this.fXMLTagScanner);
+        reconciler.setDamager(dr, ITemplatePartitions.XML_TAG);
+        reconciler.setRepairer(dr, ITemplatePartitions.XML_TAG);
 
-        dr = new DefaultDamagerRepairer(this.fMultilineCommentScanner);
-        reconciler.setDamager(dr, ITemplatePartitions.LUA_MULTI_LINE_COMMENT);
-        reconciler.setRepairer(dr, ITemplatePartitions.LUA_MULTI_LINE_COMMENT);
-
-        dr = new DefaultDamagerRepairer(this.fCommentScanner);
-        reconciler.setDamager(dr, ITemplatePartitions.LUA_COMMENT);
-        reconciler.setRepairer(dr, ITemplatePartitions.LUA_COMMENT);
-
-        dr = new DefaultDamagerRepairer(this.fNumberScanner);
-        reconciler.setDamager(dr, ITemplatePartitions.LUA_NUMBER);
-        reconciler.setRepairer(dr, ITemplatePartitions.LUA_NUMBER);
 
         return reconciler;
     }
@@ -81,45 +78,56 @@ public class TemplateSourceViewerConfiguration extends
      * This method is called from base class.
      */
     protected void initializeScanners() {
-        // This is our code scanner
-        this.fCodeScanner = new LuaCodeScanner(this.getColorManager(), this.fPreferenceStore);
+        // This is lua code scanner
+        this.fLuaCodeScanner = new LuaCodeScanner(this.getColorManager(), this.fPreferenceStore);
 
-        // This is default scanners for partitions with same color.
-        this.fStringScanner = new SingleTokenScriptScanner(this.getColorManager(), this.fPreferenceStore, ITemplateColorConstants.LUA_STRING);
-        this.fSingleQuoteStringScanner = new SingleTokenScriptScanner(this.getColorManager(), this.fPreferenceStore, ITemplateColorConstants.LUA_STRING);
-        this.fMultilineCommentScanner = new SingleTokenScriptScanner(this.getColorManager(), this.fPreferenceStore,
-                ITemplateColorConstants.LUA_MULTI_LINE_COMMENT);
-        this.fCommentScanner = new SingleTokenScriptScanner(this.getColorManager(), this.fPreferenceStore, ITemplateColorConstants.LUA_SINGLE_LINE_COMMENT);
-        this.fNumberScanner = new SingleTokenScriptScanner(this.getColorManager(), this.fPreferenceStore, ITemplateColorConstants.LUA_NUMBER);
+        this.colorManager = getXMLColorManager();
+        // This is xml scanners for partitions.
+        this.fXMLScanner = getXMLScanner();
+        this.fXMLTagScanner = getXMLTagScanner();
+        
+
     }
 
     public void handlePropertyChangeEvent(PropertyChangeEvent event) {
-        if (this.fCodeScanner.affectsBehavior(event)) {
-            this.fCodeScanner.adaptToPreferenceChange(event);
+        if (this.fLuaCodeScanner.affectsBehavior(event)) {
+            this.fLuaCodeScanner.adaptToPreferenceChange(event);
         }
-        if (this.fStringScanner.affectsBehavior(event)) {
-            this.fStringScanner.adaptToPreferenceChange(event);
-        }
-        if (this.fSingleQuoteStringScanner.affectsBehavior(event)) {
-            this.fSingleQuoteStringScanner.adaptToPreferenceChange(event);
-        }
-        if (this.fMultilineCommentScanner.affectsBehavior(event)) {
-            this.fMultilineCommentScanner.adaptToPreferenceChange(event);
-        }
-        if (this.fCommentScanner.affectsBehavior(event)) {
-            this.fCommentScanner.adaptToPreferenceChange(event);
-        }
-        if (this.fNumberScanner.affectsBehavior(event)) {
-            this.fNumberScanner.adaptToPreferenceChange(event);
-        }
+
     }
 
     public boolean affectsTextPresentation(PropertyChangeEvent event) {
-        return this.fCodeScanner.affectsBehavior(event) || this.fStringScanner.affectsBehavior(event)
-                || this.fSingleQuoteStringScanner.affectsBehavior(event) || this.fMultilineCommentScanner.affectsBehavior(event)
-                || this.fCommentScanner.affectsBehavior(event) || this.fNumberScanner.affectsBehavior(event);
+        return this.fLuaCodeScanner.affectsBehavior(event);
     }
 
+    
+	protected XMLScanner getXMLScanner() {
+		if (fXMLScanner == null) {
+			fXMLScanner = new XMLScanner(colorManager);
+			fXMLScanner.setDefaultReturnToken(
+				new Token(
+					new TextAttribute(
+						colorManager.getColor(IXMLColorConstants.DEFAULT))));
+		}
+		return fXMLScanner;
+	}
+	protected XMLTagScanner getXMLTagScanner() {
+		if (fXMLTagScanner == null) {
+			fXMLTagScanner = new XMLTagScanner(colorManager);
+			fXMLTagScanner.setDefaultReturnToken(
+				new Token(
+					new TextAttribute(
+						colorManager.getColor(IXMLColorConstants.TAG))));
+		}
+		return fXMLTagScanner;
+	}
+	
+	protected ColorManager getXMLColorManager() {
+		if (colorManager == null) {
+			colorManager = new ColorManager();	
+		}
+			return colorManager;
+	}
     /**
      * Lua specific one line comment
      * 
@@ -132,7 +140,7 @@ public class TemplateSourceViewerConfiguration extends
 
     @Override
     public String[] getConfiguredContentTypes(final ISourceViewer sourceViewer) {
-        return ITemplatePartitions.LUA_PARTITION_TYPES;
+        return ITemplatePartitions.TEMPLATE_PARTITION_TYPES;
     }
 
 }
