@@ -67,7 +67,6 @@ import org.erlide.ui.util.ProblemMarkerManager;
 import org.erlide.utils.SystemUtils;
 import org.osgi.framework.BundleContext;
 
-import com.rytong.lua.LuaTextTools;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -88,7 +87,7 @@ public class ErlideUIPlugin extends AbstractUIPlugin {
      */
     private static volatile ErlideUIPlugin plugin;
     
-    private LuaTextTools  fLuaTextTools;
+
 
     /**
      * Resource bundle.
@@ -198,13 +197,7 @@ public class ErlideUIPlugin extends AbstractUIPlugin {
         }
         return plugin;
     }
-    
-    public synchronized LuaTextTools getTextTools() {
-        if (fLuaTextTools == null) {
-            fLuaTextTools = new LuaTextTools(true);
-        }
-        return fLuaTextTools;
-    }
+
 
     /**
      * Returns the string from the plugin's resource bundle, or 'key' if not
