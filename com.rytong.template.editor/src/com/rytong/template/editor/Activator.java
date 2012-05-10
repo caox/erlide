@@ -4,7 +4,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import com.rytong.template.editor.cs.TemplateTextTools;
+import com.rytong.template.editor.template.TemplateTextTools;
 
 /**
  * The activator class controls the plug-in life cycle

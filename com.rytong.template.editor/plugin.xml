@@ -13,7 +13,7 @@
             id="com.rytong.template.editor.editors.XMLEditor">
       </editor>
       <editor
-            class="com.rytong.template.editor.cs.TemplateEditor"
+            class="com.rytong.template.editor.template.TemplateEditor"
             default="false"
             extensions="cs"
             icon="icons/lua-logo.gif"
@@ -24,7 +24,7 @@
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
-            class="com.rytong.template.editor.cs.LuaPreferenceInitializer">
+            class="com.rytong.template.editor.template.TemplatePreferenceInitializer">
       </initializer>
    </extension>
 
