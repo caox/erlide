@@ -16,6 +16,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 
+/**
+ * @since 0.16
+ */
 public class EWPWizardPage extends WizardPage {
     
     private Text ewpNodeText;

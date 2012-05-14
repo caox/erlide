@@ -10,6 +10,9 @@ public interface IBackendFactory {
 
     IBackend createBackend(final BackendData data);
     
+    /**
+     * @since 1.0
+     */
     IBackend registerEWPBackend(final RuntimeInfo info);
 
 }

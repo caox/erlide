@@ -58,6 +58,9 @@ public interface IBackendManager {
 
     IBackend createExecutionBackend(final BackendData data);
     
+    /**
+     * @since 1.0
+     */
     IBackend registerExsitedBackend(final RuntimeInfo info);
 
     void dispose();
