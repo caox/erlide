@@ -11,6 +11,9 @@ import org.erlide.backend.IBackend;
 import org.erlide.backend.runtimeinfo.RuntimeInfo;
 import org.erlide.jinterface.ErlLogger;
 
+/**
+ * @since 0.16
+ */
 public class EWPWizard extends Wizard implements INewWizard {
 
     private EWPWizardPage fPage;
