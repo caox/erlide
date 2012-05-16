@@ -21,6 +21,7 @@ public interface ITemplatePartitions {
     
     public static final String LUA = "__lua";
     public static final String CS = "__cs";
+    public static final String TEMPLATE_STRING = "__tepmlate_string";
     public static final String LUA_COMMENT = "__lua_comment"; //$NON-NLS-1$
     public static final String LUA_MULTI_LINE_COMMENT = "__lua_multi_line_comment"; //$NON-NLS-1$
     public static final String LUA_NUMBER = "__lua_number"; //$NON-NLS-1$
@@ -31,6 +32,7 @@ public interface ITemplatePartitions {
     	IDocument.DEFAULT_CONTENT_TYPE,
     	ITemplatePartitions.LUA,
     	ITemplatePartitions.CS,
+    	ITemplatePartitions.TEMPLATE_STRING,
     	ITemplatePartitions.XML_TAG,
     	ITemplatePartitions.LUA_COMMENT, 
     	ITemplatePartitions.LUA_STRING, 

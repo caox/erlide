@@ -11,28 +11,30 @@ import org.eclipse.jface.text.rules.PatternRule;
 import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
 import org.eclipse.jface.text.rules.Token;
 
-import com.rytong.template.editor.editors.TagRule;
-
 public class TemplatePartitionScanner extends RuleBasedPartitionScanner {
 
 	public TemplatePartitionScanner() {
         super();
         List<PatternRule> rules = new ArrayList<PatternRule>();
 
-        
 
+        // CS  contained in <!cs !> and #{cs }#
+        IToken csCode = new Token(ITemplatePartitions.CS);
+        IToken insindeCSCode = new Token(ITemplatePartitions.CS);
+        rules.add(new MultiLineRule("<?cs", "?>", csCode));//$NON-NLS-1$ //$NON-NLS-2$
+        rules.add(new MultiLineRule("#{cs", "}#", insindeCSCode));//$NON-NLS-1$ //$NON-NLS-2$
+        
         // Lua script contained in <![CDATA[ ... ]>
         IToken luaCode = new Token(ITemplatePartitions.LUA);
-        rules.add(new MultiLineRule("<![CDATA[", "]>", luaCode));//$NON-NLS-1$ //$NON-NLS-2$
+        rules.add(new MultiLineRule("<![CDATA[", "]]>", luaCode));//$NON-NLS-1$ //$NON-NLS-2$
         
-     // CS  contained in <!cs !> and #{cs }#
-        IToken csCode = new Token(ITemplatePartitions.CS);
-        rules.add(new MultiLineRule("<?cs", "?>", csCode));//$NON-NLS-1$ //$NON-NLS-2$
-
+        
         // XML Tag  
         IToken tag = new Token(ITemplatePartitions.XML_TAG);
-        rules.add(new TagRule(tag));
+        rules.add(new MultiLineRule("<", ">", tag));
 
+       
+        
         // Apply rules
         IPredicateRule[] result = new IPredicateRule[rules.size()];
         rules.toArray(result);

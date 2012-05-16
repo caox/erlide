@@ -43,8 +43,14 @@ public class TemplatePreferenceInitializer extends AbstractPreferenceInitializer
         PreferenceConverter.setDefault(store, ITemplateColorConstants.LUA_NUMBER, new RGB(185, 20, 20));
         PreferenceConverter.setDefault(store, ITemplateColorConstants.LUA_STRING, new RGB(42, 0, 255));
         
+        // CS color
         PreferenceConverter.setDefault(store, ITemplateColorConstants.CS_KEYWORD, new RGB(127, 0, 85));
+        PreferenceConverter.setDefault(store, ITemplateColorConstants.CS_TAG, new RGB(0, 128, 0));
         PreferenceConverter.setDefault(store, ITemplateColorConstants.CS_STRING, new RGB(42, 0, 255));
+        
+        // XML color
+        PreferenceConverter.setDefault(store, ITemplateColorConstants.XML_TAG, new RGB(0, 0, 128));
+        PreferenceConverter.setDefault(store, ITemplateColorConstants.XML_STRING, new RGB(42, 0, 255));
 
         store.setDefault(ITemplateColorConstants.LUA_SINGLE_LINE_COMMENT + PreferenceConstants.EDITOR_BOLD_SUFFIX, false);
         store.setDefault(ITemplateColorConstants.LUA_SINGLE_LINE_COMMENT + PreferenceConstants.EDITOR_ITALIC_SUFFIX, false);

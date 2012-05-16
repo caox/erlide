@@ -15,24 +15,18 @@ import org.eclipse.dltk.ui.text.AbstractScriptScanner;
 import org.eclipse.dltk.ui.text.IColorManager;
 import org.eclipse.dltk.ui.text.ScriptPresentationReconciler;
 import org.eclipse.dltk.ui.text.ScriptSourceViewerConfiguration;
-import org.eclipse.dltk.ui.text.SingleTokenScriptScanner;
 import org.eclipse.dltk.ui.text.completion.ContentAssistPreference;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
-import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.rytong.template.editor.cs.CSCodeScanner;
-import com.rytong.template.editor.editors.ColorManager;
-import com.rytong.template.editor.editors.IXMLColorConstants;
-import com.rytong.template.editor.editors.XMLScanner;
-import com.rytong.template.editor.editors.XMLTagScanner;
+import com.rytong.template.editor.xml.XMLTagScanner;
 import com.rytong.template.editor.lua.LuaCodeScanner;
 import com.rytong.template.editor.lua.LuaContentAssistPreference;
 
@@ -41,9 +35,10 @@ public class TemplateSourceViewerConfiguration extends
 
     private AbstractScriptScanner fLuaCodeScanner;
     private AbstractScriptScanner fCSCodeScanner;
-	private XMLTagScanner fXMLTagScanner;
-	private XMLScanner fXMLScanner;
-	private ColorManager colorManager;
+	private AbstractScriptScanner fXMLTagScanner;
+	private AbstractScriptScanner fTemplateStringScanner;
+//	private XMLScanner fXMLScanner;
+//	private ColorManager colorManager;
 //    private AbstractScriptScanner fCommentScanner;
 //    private AbstractScriptScanner fMultilineCommentScanner;
 //    private AbstractScriptScanner fNumberScanner;
@@ -62,21 +57,28 @@ public class TemplateSourceViewerConfiguration extends
         reconciler.setDocumentPartitioning(this.getConfiguredDocumentPartitioning(sourceViewer));
 
         DefaultDamagerRepairer dr;
-        dr = new DefaultDamagerRepairer(this.fXMLScanner);
-        reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
-        reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
-
-        dr = new DefaultDamagerRepairer(this.fLuaCodeScanner);
-        reconciler.setDamager(dr, ITemplatePartitions.LUA);
-        reconciler.setRepairer(dr, ITemplatePartitions.LUA);
         
         dr = new DefaultDamagerRepairer(this.fCSCodeScanner);
         reconciler.setDamager(dr, ITemplatePartitions.CS);
         reconciler.setRepairer(dr, ITemplatePartitions.CS);
+        
+        dr = new DefaultDamagerRepairer(this.fTemplateStringScanner);
+        reconciler.setDamager(dr, ITemplatePartitions.TEMPLATE_STRING);
+        reconciler.setRepairer(dr, ITemplatePartitions.TEMPLATE_STRING);
+        
+        
+        dr = new DefaultDamagerRepairer(this.fLuaCodeScanner);
+        reconciler.setDamager(dr, ITemplatePartitions.LUA);
+        reconciler.setRepairer(dr, ITemplatePartitions.LUA);
+        
 
         dr = new DefaultDamagerRepairer(this.fXMLTagScanner);
         reconciler.setDamager(dr, ITemplatePartitions.XML_TAG);
         reconciler.setRepairer(dr, ITemplatePartitions.XML_TAG);
+        
+
+//        reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
+//        reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
 
         return reconciler;
@@ -90,57 +92,35 @@ public class TemplateSourceViewerConfiguration extends
         this.fLuaCodeScanner = new LuaCodeScanner(this.getColorManager(), this.fPreferenceStore);
         this.fCSCodeScanner = new CSCodeScanner(this.getColorManager(), this.fPreferenceStore);
 
-        
-        this.colorManager = getXMLColorManager();
         // This is xml scanners for partitions.
-        this.fXMLScanner = getXMLScanner();
-        this.fXMLTagScanner = getXMLTagScanner();
-        
+        this.fXMLTagScanner = new XMLTagScanner(this.getColorManager(), this.fPreferenceStore);
+        this.fTemplateStringScanner = new TemplateStringScanner(this.getColorManager(), this.fPreferenceStore);
 
     }
 
     public void handlePropertyChangeEvent(PropertyChangeEvent event) {
         if (this.fLuaCodeScanner.affectsBehavior(event)) {
-            this.fCSCodeScanner.adaptToPreferenceChange(event);
+            this.fLuaCodeScanner.adaptToPreferenceChange(event);
         }
 
-        if (this.fLuaCodeScanner.affectsBehavior(event)) {
+        if (this.fCSCodeScanner.affectsBehavior(event)) {
             this.fCSCodeScanner.adaptToPreferenceChange(event);
+        }
+        if (this.fXMLTagScanner.affectsBehavior(event)) {
+            this.fXMLTagScanner.adaptToPreferenceChange(event);
+        }
+        if (this.fTemplateStringScanner.affectsBehavior(event)) {
+            this.fTemplateStringScanner.adaptToPreferenceChange(event);
         }
     }
 
     public boolean affectsTextPresentation(PropertyChangeEvent event) {
-        return this.fLuaCodeScanner.affectsBehavior(event)||this.fCSCodeScanner.affectsBehavior(event);
+        return this.fLuaCodeScanner.affectsBehavior(event)||this.fCSCodeScanner.affectsBehavior(event) 
+        		|| this.fXMLTagScanner.affectsBehavior(event) || this.fTemplateStringScanner.affectsBehavior(event);
     }
 
     
-	protected XMLScanner getXMLScanner() {
-		if (fXMLScanner == null) {
-			fXMLScanner = new XMLScanner(colorManager);
-			fXMLScanner.setDefaultReturnToken(
-				new Token(
-					new TextAttribute(
-						colorManager.getColor(IXMLColorConstants.DEFAULT))));
-		}
-		return fXMLScanner;
-	}
-	protected XMLTagScanner getXMLTagScanner() {
-		if (fXMLTagScanner == null) {
-			fXMLTagScanner = new XMLTagScanner(colorManager);
-			fXMLTagScanner.setDefaultReturnToken(
-				new Token(
-					new TextAttribute(
-						colorManager.getColor(IXMLColorConstants.TAG))));
-		}
-		return fXMLTagScanner;
-	}
-	
-	protected ColorManager getXMLColorManager() {
-		if (colorManager == null) {
-			colorManager = new ColorManager();	
-		}
-			return colorManager;
-	}
+
     /**
      * Lua specific one line comment
      * 

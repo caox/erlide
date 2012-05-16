@@ -49,12 +49,13 @@ public class CSCodeScanner extends AbstractScriptScanner {
 	protected List<IRule> createRules() {
 		List<IRule> rules = new ArrayList<IRule>();
 		IToken keyword = this.getToken(ITemplateColorConstants.CS_KEYWORD);
-		//IToken numbers = this.getToken(ITemplateColorConstants.LUA_NUMBER);
-		IToken other = this.getToken(ITemplateColorConstants.CS_DEFAULT);
+		
+		IToken other = this.getToken(ITemplateColorConstants.CS_TAG);
 
 		IToken string = this.getToken(ITemplateColorConstants.CS_STRING);
 		IToken singleQuoteString = this.getToken(ITemplateColorConstants.CS_SINGLE_QUOTE_STRING);
-
+		
+		
 		// Add rule for Strings
 		rules.add(new MultiLineRule("\'", "\'", singleQuoteString, '\\', false)); //$NON-NLS-1$ //$NON-NLS-2$
 		rules.add(new MultiLineRule("\"", "\"", string, '\\', false)); //$NON-NLS-1$ //$NON-NLS-2$
@@ -87,6 +88,8 @@ public class CSCodeScanner extends AbstractScriptScanner {
 			return Character.isWhitespace(character);
 		}
 	}
+
+	
 
 	public class CSWordDetector implements IWordDetector {
 		/**

@@ -25,7 +25,13 @@ public interface ITemplateColorConstants {
 
 
     public static final String CS_KEYWORD = DLTKColorConstants.DLTK_KEYWORD;
+    public static final String CS_TAG = DLTKColorConstants.DLTK_FUNCTION_DEFINITION;
 	public static final String CS_DEFAULT = DLTKColorConstants.DLTK_DEFAULT;
 	public static final String CS_STRING = DLTKColorConstants.DLTK_STRING;
 	public static final String CS_SINGLE_QUOTE_STRING = DLTKColorConstants.DLTK_STRING;
+	
+	public static final String XML_TAG = DLTKColorConstants.DLTKDOC_TAG;
+	public static final String XML_STRING = DLTKColorConstants.DLTK_STRING;
+	public static final String XML_SINGLE_QUOTE_STRING = DLTKColorConstants.DLTK_STRING;
+	
 }
