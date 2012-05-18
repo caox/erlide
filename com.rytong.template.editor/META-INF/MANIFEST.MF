@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.editors,
  org.eclipse.dltk.core;bundle-version="3.0.1",
  org.eclipse.dltk.ui;bundle-version="3.0.1",
- org.eclipse.core.resources;bundle-version="3.7.101"
+ org.eclipse.core.resources;bundle-version="3.7.101",
+ org.eclipse.ui.ide;bundle-version="3.7.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.rytong.template.editor,

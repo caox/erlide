@@ -19,5 +19,19 @@
             class="com.rytong.template.editor.template.TemplatePreferenceInitializer">
       </initializer>
    </extension>
+   <extension
+         id="com.rytong.template.editor.xmlError"
+         name="XML Error Marker"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <super
+            type="org.eclipse.core.resources.textmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
 
 </plugin>
