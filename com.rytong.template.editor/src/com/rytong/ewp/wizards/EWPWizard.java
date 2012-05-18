@@ -1,4 +1,4 @@
-package com.rytong.ewp;
+package com.rytong.ewp.wizards;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;

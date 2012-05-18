@@ -33,5 +33,15 @@
             value="true">
       </persistent>
    </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.erlide.ui.wizards.newWizards"
+            class="com.rytong.ewp.wizards.EWPWizard"
+            icon="icons/erlang-notext130.gif"
+            id="com.rytong.ewp.Wizard"
+            name="EWP Node">
+      </wizard>
+   </extension>
 
 </plugin>

@@ -86,8 +86,6 @@ public class ErlideUIPlugin extends AbstractUIPlugin {
      * The shared instance.
      */
     private static volatile ErlideUIPlugin plugin;
-    
-
 
     /**
      * Resource bundle.
@@ -197,7 +195,6 @@ public class ErlideUIPlugin extends AbstractUIPlugin {
         }
         return plugin;
     }
-
 
     /**
      * Returns the string from the plugin's resource bundle, or 'key' if not

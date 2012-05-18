@@ -60,13 +60,6 @@
       </wizard>
       <wizard
             category="org.erlide.ui.wizards.newWizards"
-            class="com.rytong.ewp.EWPWizard"
-            icon="icons/erl/erlang-notext130.gif"
-            id="org.erlide.ui.wizards.EWP"
-            name="EWP Node">
-      </wizard>
-      <wizard
-            category="org.erlide.ui.wizards.newWizards"
             class="org.erlide.ui.wizards.ErlangFileWizard"
             icon="icons/full/obj16/erlang_NewModule.png"
             id="org.erlide.ui.wizards.ErlangSourceFile"
