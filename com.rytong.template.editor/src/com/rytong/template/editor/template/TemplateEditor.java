@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.rytong.template.editor.template;
 
+import java.io.InputStream;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
@@ -20,12 +22,23 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
+import org.erlide.backend.BackendCore;
+import org.erlide.backend.IBackend;
+import org.erlide.jinterface.ErlLogger;
+import org.erlide.jinterface.rpc.RpcException;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 
+import com.ericsson.otp.erlang.OtpErlangAtom;
+import com.ericsson.otp.erlang.OtpErlangInt;
+import com.ericsson.otp.erlang.OtpErlangLong;
+import com.ericsson.otp.erlang.OtpErlangObject;
+import com.ericsson.otp.erlang.OtpErlangString;
+import com.ericsson.otp.erlang.OtpErlangTuple;
 import com.rytong.template.editor.Activator;
 import com.rytong.template.editor.lua.LuaLanguageToolkit;
-import com.rytong.template.editor.markers.XMLErrorHandler;
+import com.rytong.template.editor.markers.TemplateErrorHandler;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -33,90 +46,117 @@ import javax.xml.parsers.SAXParserFactory;
 
 
 public class TemplateEditor extends ScriptEditor {
-    
-    public static final String EDITOR_ID = "com.rytong.editors.TemplateEditor";
 
-    public static final String EDITOR_CONTEXT = "#EWPTemplateEditorContext";
-    
-    SAXParserFactory fParserFactory = null;
-    
-    IEditorInput input = null;
+	public static final String EDITOR_ID = "com.rytong.editors.TemplateEditor";
 
-    protected void initializeEditor() {
-        super.initializeEditor();
-        setEditorContextMenuId(EDITOR_CONTEXT);
-    }
-    
-    public IPreferenceStore getScriptPreferenceStore() {
-        return Activator.getDefault().getPreferenceStore();
-    }
-    
-    /** Connects partitions used to deal with comments or strings in editor. */
-    protected void connectPartitioningToElement(IEditorInput input, IDocument document) {
-        if (document instanceof IDocumentExtension3) {
-        	this.input = input;
-            IDocumentExtension3 extension = (IDocumentExtension3) document;
-            if (extension.getDocumentPartitioner(ITemplatePartitions.TEMPLATE_PARTITIONING) == null) {
-                TemplateTextTools tools = Activator.getDefault().getTextTools();
-                tools.setupDocumentPartitioner(document, ITemplatePartitions.TEMPLATE_PARTITIONING);
-            }
-            validateAndMark();
-        }
-    }
-    
-    @Override
-    public String getEditorId() {
-        // TODO Auto-generated method stub
-        return EDITOR_ID;
-    }
+	public static final String EDITOR_CONTEXT = "#EWPTemplateEditorContext";
 
-    @Override
-    public IDLTKLanguageToolkit getLanguageToolkit() {
-        // TODO Auto-generated method stub
-        return LuaLanguageToolkit.getDefault();
-    }
-    
-    @Override
-    public ScriptTextTools getTextTools() {
-        return Activator.getDefault().getTextTools();
-    }
-    
-    
-    @Override
+	SAXParserFactory fParserFactory = null;
+
+	IEditorInput input = null;
+
+	protected void initializeEditor() {
+		super.initializeEditor();
+		setEditorContextMenuId(EDITOR_CONTEXT);
+	}
+
+	public IPreferenceStore getScriptPreferenceStore() {
+		return Activator.getDefault().getPreferenceStore();
+	}
+
+	/** Connects partitions used to deal with comments or strings in editor. */
+	protected void connectPartitioningToElement(IEditorInput input, IDocument document) {
+		if (document instanceof IDocumentExtension3) {
+			this.input = input;
+			IDocumentExtension3 extension = (IDocumentExtension3) document;
+			if (extension.getDocumentPartitioner(ITemplatePartitions.TEMPLATE_PARTITIONING) == null) {
+				TemplateTextTools tools = Activator.getDefault().getTextTools();
+				tools.setupDocumentPartitioner(document, ITemplatePartitions.TEMPLATE_PARTITIONING);
+			}
+			validateAndMark();
+		}
+	}
+
+	@Override
+	public String getEditorId() {
+		// TODO Auto-generated method stub
+		return EDITOR_ID;
+	}
+
+	@Override
+	public IDLTKLanguageToolkit getLanguageToolkit() {
+		// TODO Auto-generated method stub
+		return LuaLanguageToolkit.getDefault();
+	}
+
+	@Override
+	public ScriptTextTools getTextTools() {
+		return Activator.getDefault().getTextTools();
+	}
+
+
+	@Override
 	public void doSave(IProgressMonitor progressMonitor) {
-    	super.doSave(progressMonitor);
-    	this.input = getEditorInput();
-    	validateAndMark();
-    }
-    
-    
-	protected void validateAndMark()
-	{
+		super.doSave(progressMonitor);
+		this.input = getEditorInput();
+		validateAndMark();
+	}
+
+
+	protected void validateAndMark() {
 		try
 		{
 			IFile file = getInputFile(input);
-			System.out.println("the file name : " +file.getName());
-			XMLErrorHandler xmlErrorHandler = new XMLErrorHandler(file);
-			xmlErrorHandler.removeExistingMarkers();
-			
-			XMLErrorHandler reporter = new XMLErrorHandler(file);
+			ErlLogger.debug("the file name : " +file.getName());
+			String content = getInputDocument().get();
+			TemplateErrorHandler reporter = new TemplateErrorHandler(file);
+			reporter.removeExistingMarkers();
+
+
 			try {
+				IBackend ewpBackend = BackendCore.getBackendManager().getEWPBackend();
+				if(ewpBackend != null) {
+					ErlLogger.debug("call ewp backend to parse the cs file");
+					OtpErlangObject res = ewpBackend.call("tmpl", "validate_for_ide", "s", content);
+					//ErlLogger.debug("the rpc call result : " + res);
+					if(res instanceof OtpErlangTuple) {
+						OtpErlangTuple tuple = (OtpErlangTuple) res;
+						OtpErlangLong l = (OtpErlangLong) tuple.elementAt(1);
+						OtpErlangString s = (OtpErlangString) tuple.elementAt(2);
+						ErlLogger.debug("the tuple : " + tuple);
+						//OtpErlangAtom a = (OtpErlangAtom) tuple.elementAt(0);
+						reporter.addCSError(l.intValue(), s.stringValue());
+					}
+				}
+
 				getParser().parse(file.getContents(), reporter);
-			} catch (Exception e1) {
-			}
+			} 
+			catch (SAXParseException se) {				
+			}catch (RpcException e) {
+				//ErlLogger.debug("error happened when do rpc call");
+				e.printStackTrace();
+			}catch (Exception e1) {
+				e1.printStackTrace();
+			} 
 		}
 		catch (Exception e)
 		{
 			//e.printStackTrace();
 		}
 	}
-	
+
 	private SAXParser getParser() throws ParserConfigurationException,
 	SAXException {
 		if (fParserFactory == null) {
 			fParserFactory = SAXParserFactory.newInstance();
 		}
 		return fParserFactory.newSAXParser();
+	}
+
+	protected IDocument getInputDocument()
+	{
+		IDocument document = getDocumentProvider().getDocument(input);
+		return document;
 	}
 
 	protected IFile getInputFile(IEditorInput input)

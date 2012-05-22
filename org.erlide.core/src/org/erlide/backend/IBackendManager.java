@@ -61,7 +61,12 @@ public interface IBackendManager {
     /**
      * @since 1.0
      */
-    IBackend registerExsitedBackend(final RuntimeInfo info);
+    IBackend registerEWPBackend(final RuntimeInfo info);
+    
+    /**
+     * @since 1.0
+     */
+    IBackend getEWPBackend();
 
     void dispose();
 

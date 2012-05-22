@@ -20,7 +20,7 @@
       </initializer>
    </extension>
    <extension
-         id="com.rytong.template.editor.xmlError"
+         id="com.rytong.template.editor.templateError"
          name="XML Error Marker"
          point="org.eclipse.core.resources.markers">
       <super

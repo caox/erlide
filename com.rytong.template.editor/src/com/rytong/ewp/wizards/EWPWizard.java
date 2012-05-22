@@ -52,7 +52,7 @@ public class EWPWizard extends Wizard implements INewWizard {
         final RuntimeInfo info = ideBackend.getRuntimeInfo();
         info.setNodeName(ewpName);
         info.setCookie(cookie);
-        if (null==BackendCore.getBackendManager().registerExsitedBackend(info)){
+        if (null==BackendCore.getBackendManager().registerEWPBackend(info)){
             MessageDialog.openError(getShell(), "Error",
                     "can't find ewp node with name: " + ewpName + " and cookie: " + cookie);
             return false;

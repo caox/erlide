@@ -73,6 +73,8 @@ public final class BackendManager implements IEpmdListener, IBackendManager {
     private final BackendManagerLaunchListener launchListener;
     private final IBackendFactory factory;
     private final RuntimeInfo erlideRuntimeInfo;
+    
+    private IBackend ewpBackend;
 
     public BackendManager(final RuntimeInfo erlideRuntimeInfo,
             final IBackendFactory factory) {
@@ -434,15 +436,21 @@ public final class BackendManager implements IEpmdListener, IBackendManager {
     }
 
     @Override
-    public IBackend registerExsitedBackend(RuntimeInfo info) {
+    public IBackend registerEWPBackend(RuntimeInfo info) {
         ErlLogger.debug("register existed ewp backend " + info.getNodeName());
         final IBackend b = factory.registerEWPBackend(info);
         if (b!=null) {
             addBackend(b);
+            ewpBackend = b;
             notifyBackendChange(b, BackendEvent.ADDED, null, null);
             return b;
         }       
         return null;
+    }
+    
+    @Override
+    public IBackend getEWPBackend() {
+        return ewpBackend;
     }
 
 }
