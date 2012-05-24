@@ -32,6 +32,7 @@ import org.xml.sax.SAXParseException;
 
 import com.ericsson.otp.erlang.OtpErlangAtom;
 import com.ericsson.otp.erlang.OtpErlangInt;
+import com.ericsson.otp.erlang.OtpErlangList;
 import com.ericsson.otp.erlang.OtpErlangLong;
 import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangString;
@@ -120,12 +121,17 @@ public class TemplateEditor extends ScriptEditor {
 					OtpErlangObject res = ewpBackend.call("tmpl", "validate_for_ide", "s", content);
 					//ErlLogger.debug("the rpc call result : " + res);
 					if(res instanceof OtpErlangTuple) {
-						OtpErlangTuple tuple = (OtpErlangTuple) res;
-						OtpErlangLong l = (OtpErlangLong) tuple.elementAt(1);
-						OtpErlangString s = (OtpErlangString) tuple.elementAt(2);
+						final OtpErlangTuple tuple = (OtpErlangTuple) res;
 						ErlLogger.debug("the tuple : " + tuple);
-						//OtpErlangAtom a = (OtpErlangAtom) tuple.elementAt(0);
-						reporter.addCSError(l.intValue(), s.stringValue());
+						OtpErlangList list = (OtpErlangList) tuple.elementAt(1);
+						for(final OtpErlangObject o : list) {
+							final OtpErlangTuple error = (OtpErlangTuple) o;
+							OtpErlangLong l = (OtpErlangLong) error.elementAt(0);
+							OtpErlangString s = (OtpErlangString) error.elementAt(1);
+							//OtpErlangAtom a = (OtpErlangAtom) tuple.elementAt(0);
+							reporter.addCSError(l.intValue(), s.stringValue());
+						}
+						
 					}
 				}
 
