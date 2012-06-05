@@ -24,7 +24,7 @@ public class XMLTagScanner extends AbstractScriptScanner {
 	}
 
 	private static String[] fgTokenProperties = new String[] { 
-		ITemplatePartitions.CS,
+		ITemplateColorConstants.CS_TAG,
 		ITemplateColorConstants.XML_STRING,
 		ITemplateColorConstants.XML_SINGLE_QUOTE_STRING,
 		ITemplateColorConstants.XML_TAG };

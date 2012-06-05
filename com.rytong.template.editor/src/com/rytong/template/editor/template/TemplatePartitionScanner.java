@@ -21,17 +21,17 @@ public class TemplatePartitionScanner extends RuleBasedPartitionScanner {
         // CS  contained in <!cs !> and #{cs }#
         IToken csCode = new Token(ITemplatePartitions.CS);
         IToken insindeCSCode = new Token(ITemplatePartitions.CS);
-        rules.add(new MultiLineRule("<?cs", "?>", csCode));//$NON-NLS-1$ //$NON-NLS-2$
-        rules.add(new MultiLineRule("#{cs", "}#", insindeCSCode));//$NON-NLS-1$ //$NON-NLS-2$
+        rules.add(new MultiLineRule("<?cs", "?>", csCode, '\\', false));//$NON-NLS-1$ //$NON-NLS-2$
+        rules.add(new MultiLineRule("#{cs", "}#", insindeCSCode, '\\', false));//$NON-NLS-1$ //$NON-NLS-2$
         
         // Lua script contained in <![CDATA[ ... ]>
         IToken luaCode = new Token(ITemplatePartitions.LUA);
-        rules.add(new MultiLineRule("<![CDATA[", "]]>", luaCode));//$NON-NLS-1$ //$NON-NLS-2$
+        rules.add(new MultiLineRule("<![CDATA[", "]]>", luaCode, '\\', false));//$NON-NLS-1$ //$NON-NLS-2$
         
         
         // XML Tag  
         IToken tag = new Token(ITemplatePartitions.XML_TAG);
-        rules.add(new MultiLineRule("<", ">", tag));
+        rules.add(new MultiLineRule("<", ">", tag, '\\', false));
 
        
         

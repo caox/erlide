@@ -37,13 +37,15 @@ public class LuaCodeScanner extends AbstractScriptScanner {
     private static String[] fgKeywords = { "and", "break", "do", "else", "elseif", "end", "false", "for", "function", "if", "in", "local", "nil",
             "not", "or", "repeat", "return", "then", "true", "until", "while" };
 
-    private static String[] fgTokenProperties = new String[] { ITemplateColorConstants.LUA_STRING, 
+    private static String[] fgTokenProperties = new String[] { 
+    	ITemplateColorConstants.CS_TAG,
+    	ITemplateColorConstants.LUA_STRING, 
     	ITemplateColorConstants.LUA_SINGLE_LINE_COMMENT,
-            ITemplateColorConstants.LUA_MULTI_LINE_COMMENT,
-            ITemplateColorConstants.LUA_NUMBER, 
-            ITemplateColorConstants.LUA_DEFAULT,
-            ITemplatePartitions.LUA_SINGLE_QUOTE_STRING,
-            ITemplateColorConstants.LUA_KEYWORD };
+    	ITemplateColorConstants.LUA_MULTI_LINE_COMMENT,
+    	ITemplateColorConstants.LUA_NUMBER, 
+    	ITemplateColorConstants.LUA_DEFAULT,
+    	ITemplateColorConstants.LUA_SINGLE_QUOTE_STRING,
+    	ITemplateColorConstants.LUA_KEYWORD };
 
     public LuaCodeScanner(IColorManager manager, IPreferenceStore store) {
         super(manager, store);
@@ -64,11 +66,18 @@ public class LuaCodeScanner extends AbstractScriptScanner {
         
         IToken string = this.getToken(ITemplateColorConstants.LUA_STRING);
         IToken singleQuoteString = this.getToken(ITemplateColorConstants.LUA_SINGLE_QUOTE_STRING);
+        IToken noparseString = this.getToken(ITemplateColorConstants.LUA_STRING);
         
+        IToken csTag = this.getToken(ITemplateColorConstants.CS_TAG);
+		rules.add(new MultiLineRule("<?cs", "?>", csTag));//$NON-NLS-1$ //$NON-NLS-2$
+		
+		IToken csTag1 = this.getToken(ITemplateColorConstants.CS_TAG);	
+		rules.add(new MultiLineRule("#{cs", "}#", csTag1));//$NON-NLS-1$ //$NON-NLS-2$
         // Add rule for Strings
         rules.add(new MultiLineRule("\'", "\'", singleQuoteString, '\\', false)); //$NON-NLS-1$ //$NON-NLS-2$
         rules.add(new MultiLineRule("\"", "\"", string, '\\', false)); //$NON-NLS-1$ //$NON-NLS-2$
-
+        rules.add(new MultiLineRule("[[", "]]", noparseString));
+        
         // Add rule for multi-line comments
         rules.add(new MultiLineRule("--[[", "]]", multiline));
 
