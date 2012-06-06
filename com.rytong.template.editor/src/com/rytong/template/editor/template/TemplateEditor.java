@@ -17,17 +17,30 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionContext;
+import org.eclipse.ui.actions.ActionGroup;
+import org.eclipse.ui.texteditor.ContentAssistAction;
+import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
+import org.eclipse.ui.texteditor.ResourceAction;
+import org.eclipse.ui.texteditor.TextOperationAction;
 import org.erlide.backend.BackendCore;
 import org.erlide.backend.IBackend;
 import org.erlide.jinterface.ErlLogger;
 import org.erlide.jinterface.rpc.RpcException;
+import org.erlide.utils.SystemUtils;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import com.rytong.template.editor.actions.IndentAction;
 
 
 import com.ericsson.otp.erlang.OtpErlangAtom;
@@ -52,9 +65,13 @@ public class TemplateEditor extends ScriptEditor {
 
 	public static final String EDITOR_CONTEXT = "#EWPTemplateEditorContext";
 
+	public static final String INDENT = "com.rytong.template.editor.actions.indent";
+	
 	SAXParserFactory fParserFactory = null;
 
 	IEditorInput input = null;
+
+	private IndentAction indentAction;
 
 	protected void initializeEditor() {
 		super.initializeEditor();
@@ -101,6 +118,24 @@ public class TemplateEditor extends ScriptEditor {
 		super.doSave(progressMonitor);
 		this.input = getEditorInput();
 		validateAndMark();
+	}
+	
+	@Override
+	protected void initializeKeyBindingScopes() {
+		setKeyBindingScopes(new String[] { "com.rytong.template.editor.templateEditorScope" }); //$NON-NLS-1$
+	}
+	
+	@Override
+	protected void createActions() {
+		super.createActions();
+
+		indentAction = new IndentAction(
+				TemplateEditorMessages.getBundleForConstructedKeys(),
+				"Indent.", this); //$NON-NLS-1$
+		indentAction.setActionDefinitionId(INDENT);
+		setAction("Indent", indentAction); //$NON-NLS-1$
+		markAsStateDependentAction("Indent", true); //$NON-NLS-1$
+		markAsSelectionDependentAction("Indent", true); //$NON-NLS-1$
 	}
 
 
