@@ -94,10 +94,10 @@ public class IndentAction extends TextEditorAction {
     
     protected OtpErlangObject indentLines(final int offset, final int length,
     		final String text) throws RpcException {
-    	IBackend ewpBackend = BackendCore.getBackendManager().getEWPBackend();
-    	if(ewpBackend != null) {
+    	IBackend ideBackend = BackendCore.getBackendManager().getIdeBackend();
+    	if(ideBackend != null) {
     		ErlLogger.debug("call ewp backend to indent the cs file");
-    		OtpErlangObject res = ewpBackend.call("tmpl", "indent", "iis", offset, length, text);
+    		OtpErlangObject res = ideBackend.call("ewp_tmpl_indent", "indent_lines", "iis", offset, length, text);
     		ErlLogger.debug("the rpc call result : " + res);
     		return res;
 

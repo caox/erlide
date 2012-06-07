@@ -8,7 +8,7 @@
             class="com.rytong.template.editor.template.TemplateEditor"
             default="false"
             extensions="cs"
-            icon="icons/lua-logo.gif"
+            icon="icons/cs.gif"
             id="com.rytong.editors.TemplateEditor"
             name="EWP Template Editor">
       </editor>
