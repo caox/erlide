@@ -1,12 +1,12 @@
 %% Author: caoxu
-%% Created: 2012-6-7
+%% Created: 2012-6-7 
 %% Description: parse cs file to do the indentation
 -module(ewp_tmpl_indent).
 
 %%
 %% Include files
 %%
-%%-define(DEBUG, 1).
+%% -define(DEBUG, 1).
 %% -define(IO_FORMAT_DEBUG, 1).
 -include("erlide.hrl").
 
@@ -21,9 +21,9 @@
 %%
 
 indent_lines(Offset, Length, Text) ->
+    ?D(Text),
     Str = try 
-              Bin = unicode:characters_to_binary(Text),
-              re:replace(Bin, "\\t", "    ", [global, {return, list}])
+              re:replace(Text, "\\t", "    ", [global, {return, list}, unicode])
           catch _:_ ->
                     Text
           end,
@@ -37,7 +37,7 @@ indent_lines(Offset, Length, Text) ->
 
 do_indent_lines(Lines) ->
     %% get whitespace length of the first line
-    Base = case re:run(hd(Lines), "^\\s*") of
+    Base = case catch(re:run(hd(Lines), "^\\s*", [unicode])) of
                {match, [{0, Int}]} ->
                    Int;
                _ ->
@@ -47,6 +47,7 @@ do_indent_lines(Lines) ->
     indent(Lines, Base, false, []).
 
 indent([], _, _IsLua, Res) ->
+    ?D(Res),
     Res;
 %% indent([Line|Rest], Length, true, Res) ->
 %%     Striped = string:strip(Line, left),
@@ -124,8 +125,7 @@ parse(Line) ->
 
 parse_xml_tag(Line) ->
     try
-        Bin = unicode:characters_to_binary(Line),
-        case re:run(Bin, "(<.*/>|<.*>.*</.*>)") of
+        case re:run(Line, "(<.*/>|<.*>.*</.*>)", [unicode]) of
             {match, _} ->
                 {literal, Line};
             _ ->
