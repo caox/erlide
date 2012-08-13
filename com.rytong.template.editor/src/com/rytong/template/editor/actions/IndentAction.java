@@ -97,7 +97,7 @@ public class IndentAction extends TextEditorAction {
     	IBackend ideBackend = BackendCore.getBackendManager().getIdeBackend();
     	if(ideBackend != null) {
     		ErlLogger.debug("call ewp backend to indent the cs file");
-    		OtpErlangObject res = ideBackend.call("ewp_tmpl_indent", "indent_lines", "iis", offset, length, text);
+    		OtpErlangObject res = ideBackend.call(15000, "ewp_tmpl_indent", "indent_lines", "iis", offset, length, text);
     		ErlLogger.debug("the rpc call result : " + res);
     		return res;
 
@@ -123,36 +123,39 @@ public class IndentAction extends TextEditorAction {
                 (ITextSelection) sel);
 //        final ITextSelection getSelection = getTextSelection(document,
 //                selection);
-        String text;
-        OtpErlangObject r1 = null;
-        try {
-            text = document.get(selection.getOffset(), selection.getLength());
-            ErlLogger.debug("the selected text : "+ text);
-            // call erlang, with selection within text
-            r1 = indentLines(selection.getOffset(), selection.getLength(), text);
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-        final String newText = Util.stringValue(r1);
-        if (newText == null) {
-            final Status status = new Status(IStatus.ERROR,
-                    ErlangCore.PLUGIN_ID,
-                    ErlangStatus.INTERNAL_ERROR.getValue(), "indent returned "
-                            + r1 + " instead of a string", null);
-            ErlLogger.error("INTERNAL ERROR: indent returned " + r1
-                    + " instead of a string");
-
-            ErrorDialog.openError(textEditor.getSite().getShell(),
-            		TemplateEditorMessages.IndentAction_error_message,
-                    String.valueOf(r1), status);
-            return;
-        }
+        
         final int startLine = selection.getStartLine();
         final int endLine = selection.getEndLine();
         final int nLines = endLine - startLine + 1;
+
+        
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                String text;
+                OtpErlangObject r1 = null;
+                try {
+                    text = document.get(selection.getOffset(), selection.getLength());
+                    ErlLogger.debug("the selected text : "+ text);
+                    // call erlang, with selection within text
+                    r1 = indentLines(selection.getOffset(), selection.getLength(), text);
+                } catch (final Exception e) {
+                    e.printStackTrace();
+                }
+                final String newText = Util.stringValue(r1);
+                if (newText == null) {
+                    final Status status = new Status(IStatus.ERROR,
+                            ErlangCore.PLUGIN_ID,
+                            ErlangStatus.INTERNAL_ERROR.getValue(), "indent returned "
+                                    + r1 + " instead of a string", null);
+                    ErlLogger.error("INTERNAL ERROR: indent returned " + r1
+                            + " instead of a string");
+
+                    ErrorDialog.openError(textEditor.getSite().getShell(),
+                    		TemplateEditorMessages.IndentAction_error_message,
+                            String.valueOf(r1), status);
+                    return;
+                }
                 final IRewriteTarget target = (IRewriteTarget) textEditor
                         .getAdapter(IRewriteTarget.class);
                 if (target != null) {
