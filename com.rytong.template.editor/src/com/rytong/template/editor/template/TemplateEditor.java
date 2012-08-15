@@ -11,6 +11,8 @@
 package com.rytong.template.editor.template;
 
 import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.io.StringBufferInputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -39,6 +41,7 @@ import org.erlide.jinterface.rpc.RpcException;
 import org.erlide.utils.SystemUtils;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import org.xml.sax.XMLReader;
 
 import com.rytong.template.editor.actions.IndentAction;
 
@@ -169,8 +172,21 @@ public class TemplateEditor extends ScriptEditor {
 						
 					}
 				}
+				SAXParser parser = getParser();
+				XMLReader reader = parser.getXMLReader(); 
 
-				getParser().parse(file.getContents(), reporter);
+				reader.setFeature("http://xml.org/sax/features/validation", false);
+				reader.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
+				reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+				reader.setFeature("http://xml.org/sax/features/external-general-entities", false);
+				reader.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+				reader.setFeature("http://xml.org/sax/features/use-entity-resolver2", false);   
+				reader.setFeature("http://xml.org/sax/features/resolve-dtd-uris", false);
+				StringBufferInputStream s1 = new StringBufferInputStream("<ewp_tmpl_root>");
+				StringBufferInputStream s2 = new StringBufferInputStream("</ewp_tmpl_root>");
+				SequenceInputStream s = new SequenceInputStream(s1, file.getContents());
+				parser.parse(new SequenceInputStream(s, s2), reporter);
+				
 			} 
 			catch (SAXParseException se) {				
 			}catch (RpcException e) {
@@ -190,6 +206,7 @@ public class TemplateEditor extends ScriptEditor {
 	SAXException {
 		if (fParserFactory == null) {
 			fParserFactory = SAXParserFactory.newInstance();
+			fParserFactory.setValidating(false);
 		}
 		return fParserFactory.newSAXParser();
 	}
