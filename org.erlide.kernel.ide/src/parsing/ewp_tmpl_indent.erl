@@ -1,5 +1,5 @@
 %% Author: caoxu
-%% Created: 2012-6-7 
+%% Created: 2012-6-7
 %% Description: parse cs file to do the indentation
 -module(ewp_tmpl_indent).
 
@@ -22,12 +22,12 @@
 
 indent_lines(Offset, Length, Text) ->
     ?D(Text),
-    Str = try 
+    Str = try
               re:replace(Text, "\\t", "    ", [global, {return, list}, unicode])
           catch _:_ ->
                     Text
           end,
-    {First, FirstLineNum, Lines} = erlide_text:get_text_and_lines(Str, Offset, Length),
+    {First, FirstLineNum, Lines} = erlide_text:get_text_and_lines(Str, 0, Length),
     ?D(Lines),
     do_indent_lines(Lines).
 
@@ -70,7 +70,7 @@ indent([Line|Rest], Length, IsLua, Res) ->
     indent(Rest, NewLen, NewIsLua, Res++NewLine).
 
 
-%%     IndentNext = [cs_if_begin, cs_each_begin, cs_loop_begin, cs_def, 
+%%     IndentNext = [cs_if_begin, cs_each_begin, cs_loop_begin, cs_def,
 %%                   xml_tag_begin, lua_func_begin],
 %%     Back1 = [cs_if_end, cs_def_end, cs_loop_end, cs_each_end, xml_tag_end, lua_end],
 %%     Back2 = [cs_else, cs_elif],
@@ -99,7 +99,7 @@ parse_lua(Line) ->
     {literal, Line}.
 
 
-parse(Line) ->    
+parse(Line) ->
     case Line of
         "<?xml" ++ _ ->
             {xml_begin, Line};
@@ -112,13 +112,13 @@ parse(Line) ->
         "]]>" ++ _ ->
             {cdata_end, Line};
         "</" ++ _ ->
-            {indent_end, Line}; 
+            {indent_end, Line};
         "<!" ++ _ ->
             {literal, Line};
         "<?" ++ _ ->
             {literal, Line};
         "<" ++ _ ->
-            parse_xml_tag(Line);           
+            parse_xml_tag(Line);
         _ ->
             {literal, Line}
     end.
@@ -160,7 +160,7 @@ parse_cs("<?cs /loop"++_ =Line) ->
 parse_cs(Line) ->
     {literal, Line}.
 
-whitespaces(Len) when Len > 0 -> 
+whitespaces(Len) when Len > 0 ->
     lists:concat(lists:duplicate(Len, " "));
 whitespaces(Len) ->
     [].
